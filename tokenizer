@@ -1,0 +1,170 @@
+#include<iostream>
+#include<conio.h>
+#include<string>
+#include<process.h>
+#include<ctype.h>
+using namespace std;
+
+int main()
+{
+    string program,str;
+    string tokens[100];
+    string type[100];
+    int c,i,count=0;
+    cout<<"Enter the program";
+    getline(cin,program);
+    for(i=0;i<program.length();i++)
+    {
+        str="";
+        c=0;
+        if(program[i]==32)
+        {
+            continue;
+        }
+        else
+        if(program[i]=='"')
+        {
+            str=str+program[i];
+            i++;
+            while(program[i]!='"')
+            {
+                str=str+program[i];
+                i++;
+            }
+            str=str+program[i];
+            tokens[count]=str;
+            type[count]="String";
+            count++;
+        }
+        else
+        if(isdigit(program[i]))
+        {
+            while(isdigit(program[i]))
+            {
+                str=str+program[i];
+                i++;
+            }
+            tokens[count]=str;
+            type[count]="Constant";
+            i--;
+            count++;
+        }
+        else
+        if(isalpha(program[i]))
+        {
+            while(isalnum(program[i]))
+            {
+                str=str+program[i];
+                i++;
+            }
+            tokens[count]=str;
+            if(str=="auto"||str=="break"||str=="case"||str=="char"||
+            str=="const"||str=="continue"||str=="default"||str=="do"||
+            str=="double"||str=="else"||str=="enum"||str=="extern"||
+            str=="float"||str=="for"||str=="goto"||str=="if"||
+            str=="int"||str=="long"||str=="register"||str=="return"||
+            str=="short"||str=="signed"||str=="sizeof"||str=="static"||
+            str=="struct"||str=="switch"||str=="typedef"||str=="union"||
+            str=="unsigned"||str=="void"||str=="volatile"||str=="while"||str=="cin"||str=="cout")
+            {
+                type[count]="Keyword";
+            }
+            else
+            {
+                type[count]="Identifier";
+            }
+            count++;
+            i--;
+        }
+        else
+        if(program[i]=='~')
+        {
+            tokens[count]="~";
+            type[count]="Operator";
+            i++;
+            count++;
+        }
+        else
+        if(program[i]=='+'||program[i]=='-'||program[i]=='*'||program[i]=='/'||program[i]=='='||program[i]=='%')
+        {
+            str=str+program[i];
+            c++;
+            i++;
+            if(program[i]=='=')
+            {
+                str=str+program[i];
+                i++;
+            }
+            else
+            if(program[i-1]=='+'&&program[i]=='+')
+            {
+                str=str+program[i];
+                i++;
+            }
+            else
+            if(program[i-1]=='-'&&program[i]=='-')
+            {
+                str=str+program[i];
+                i++;
+            }
+            type[count]="Operator";
+            tokens[count]=str;
+            count++;
+            i--;
+        }
+        else
+        if(program[i]=='&'||program[i]=='|'||program[i]=='!')
+        {
+            str=str+program[i];
+            c++;
+            i++;
+            if((program[i-1]=='&'||program[i-1]=='|') && program[i]==program[i-1])
+            {
+                str=str+program[i];
+                i++;
+            }
+            else
+            if (program[i-1]=='!'&&program[i]=='=')
+            {
+                str=str+program[i];
+                i++;
+            }
+            type[count]="Operator";
+            tokens[count]=str;
+            count++;
+            i--;
+        }
+        else
+        if(program[i]=='<'||program[i]=='>')
+        {
+            str=str+program[i];
+            c++;
+            i++;
+            if(program[i]=='='||(program[i-1]=='<'&&program[i]=='<')||(program[i-1]=='>'&&program[i]=='>'))
+            {
+                str=str+program[i];
+                i++;
+            }
+            type[count]="Operator";
+            tokens[count]=str;
+            count++;
+            i--;
+        }
+        else
+        if(program[i]==','||program[i]=='<'||program[i]=='>'||program[i]=='{'||
+        program[i]=='}'||program[i]==';'||program[i]=='{'||program[i]=='}'||
+        program[i]=='('||program[i]==')'||program[i]=='#')
+        {
+            str=str+program[i];
+            tokens[count]=str;
+            type[count]="Punctuator";
+            count++;
+        }
+    }
+    for(i=0;i<count;i++)
+    {
+        cout<<tokens[i]<<"--->"<<type[i]<<endl;
+    }
+    getch();
+    return 0;
+} 
